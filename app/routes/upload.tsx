@@ -33,6 +33,7 @@ const Upload = () => {
     jobDescription: string;
     file: File;
   }) => {
+    if (companyName && jobTitle && jobDescription === null) return;
     setProcessing(true);
     setStatusText("Uploading the File...");
     const uploadedFile = await fs.upload([file]);
@@ -77,8 +78,8 @@ const Upload = () => {
     data.feedback = JSON.parse(feedbackText);
     await kv.set(`resume:${uuid}`, JSON.stringify(data));
     setStatusText("Analyzing Complete, Redirecting...");
-
     console.log(data);
+    navigate(`/resume/${uuid}`);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

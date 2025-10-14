@@ -1,6 +1,9 @@
 // Utility functions shared across the app
 
 // Formats a byte size into a human-readable string in kb, mb, or gb (with b fallback)
+import { twMerge } from "tailwind-merge";
+import { clsx, type ClassValue } from "clsx";
+
 export const formatSize = (bytes: number): string => {
   if (bytes < 1024) return `${bytes} b`;
   const units = ["kb", "mb", "gb", "tb"] as const;
@@ -20,4 +23,7 @@ export const formatSize = (bytes: number): string => {
 };
 export const genrateUUID = () => {
   return crypto.randomUUID();
+};
+export const cn = (...inputs: ClassValue[]) => {
+  return twMerge(clsx(inputs));
 };
