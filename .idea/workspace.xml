@@ -8,9 +8,6 @@
       <change beforePath="$PROJECT_DIR$/../.idea/.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/material_theme_project_new.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/material_theme_project_new.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/components/ResumeCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/ResumeCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/upload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/upload.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../index.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../package.json" beforeDir="false" />
     </list>
@@ -67,7 +64,7 @@
       <updated>1759855591963</updated>
       <workItem from="1759855593025" duration="11521000" />
       <workItem from="1760284267555" duration="25880000" />
-      <workItem from="1760446821587" duration="11681000" />
+      <workItem from="1760446821587" duration="12643000" />
     </task>
     <servers />
   </component>
