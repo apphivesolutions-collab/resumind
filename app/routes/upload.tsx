@@ -7,6 +7,13 @@ import { convertPdfToImage } from "~/lib/pdf2Img";
 import { genrateUUID } from "~/lib/utils";
 import { prepareInstructions } from "../../constants";
 
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "Resumind AI | UPLOAD" },
+    { name: "description", content: "Upload your Resume to get AI Feedback" },
+  ];
+}
+
 const Upload = () => {
   const [processing, setProcessing] = useState<boolean>(false);
   const [statusText, setStatusText] = useState<string>("");
@@ -134,17 +141,31 @@ const Upload = () => {
           />
           <div className="relative mx-4 w-full max-w-xl scale-95 animate-[fadeIn_200ms_ease-out] rounded-2xl bg-white p-6 shadow-xl ring-1 ring-black/5">
             <div className="flex items-start justify-between gap-4">
-              <h3 className="text-lg font-semibold text-gray-900">Before you upload</h3>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Before you upload
+              </h3>
               <button
                 aria-label="Close"
                 className="rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                 onClick={() => setShowRules(false)}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path fillRule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clipRule="evenodd"/></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="h-5 w-5"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
+                    clipRule="evenodd"
+                  />
+                </svg>
               </button>
             </div>
             <p className="mt-2 text-sm text-gray-600">
-              To generate accurate, role-specific feedback, please provide authentic details:
+              To generate accurate, role-specific feedback, please provide
+              authentic details:
             </p>
             <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-gray-700">
               <li>Enter the real company name you’re applying to.</li>
@@ -152,7 +173,10 @@ const Upload = () => {
               <li>Paste a clear, complete job description.</li>
             </ul>
             <div className="mt-4 flex justify-end">
-              <button className="primary-button" onClick={() => setShowRules(false)}>
+              <button
+                className="primary-button"
+                onClick={() => setShowRules(false)}
+              >
                 I Understand
               </button>
             </div>
