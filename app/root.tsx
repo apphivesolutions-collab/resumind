@@ -20,9 +20,10 @@ export const meta: Route.MetaFunction = () => {
     { name: "description", content: "Build standard, professional resumes in minutes with AI assistance." },
     { property: "og:type", content: "website" },
     { property: "og:site_name", content: "Resumind AI" },
-    { property: "og:image", content: "/resumind-og-image.png" },
+    { property: "og:url", content: "https://resumind-ai-cyan.vercel.app/" },
+    { property: "og:image", content: "https://resumind-ai-cyan.vercel.app/resumind-og-image.png" },
     { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:image", content: "/resumind-og-image.png" },
+    { name: "twitter:image", content: "https://resumind-ai-cyan.vercel.app/resumind-og-image.png" },
     { name: "twitter:title", content: "Resumind AI" },
     { name: "twitter:description", content: "AI Powered Resume Builder" },
   ];
