@@ -55,7 +55,7 @@ export const Accordion: React.FC<AccordionProps> = ({
     <AccordionContext.Provider
       value={{ activeItems, toggleItem, isItemActive }}
     >
-      <div className={`space-y-2 ${className}`}>{children}</div>
+      <div className={`space-y-4 ${className}`}>{children}</div>
     </AccordionContext.Provider>
   );
 };
@@ -72,7 +72,7 @@ export const AccordionItem: React.FC<AccordionItemProps> = ({
   className = "",
 }) => {
   return (
-    <div className={`overflow-hidden border-b border-gray-200 ${className}`}>
+    <div className={`overflow-hidden border border-white/10 rounded-2xl bg-white/5 backdrop-blur-sm transition-all duration-300 ${className}`}>
       {children}
     </div>
   );
@@ -98,11 +98,11 @@ export const AccordionHeader: React.FC<AccordionHeaderProps> = ({
 
   const defaultIcon = (
     <svg
-      className={cn("w-5 h-5 transition-transform duration-200", {
-        "rotate-180": isActive,
+      className={cn("w-5 h-5 transition-transform duration-300 text-gray-400", {
+        "rotate-180 text-neon-purple": isActive,
       })}
       fill="none"
-      stroke="#98A2B3"
+      stroke="currentColor"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -123,15 +123,16 @@ export const AccordionHeader: React.FC<AccordionHeaderProps> = ({
     <button
       onClick={handleClick}
       className={`
-        w-full px-4 py-3 text-left
+        w-full px-6 py-4 text-left
         focus:outline-none
         transition-colors duration-200 flex items-center justify-between cursor-pointer
+        hover:bg-white/5
         ${className}
       `}
     >
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center space-x-3 w-full">
         {iconPosition === "left" && (icon || defaultIcon)}
-        <div className="flex-1">{children}</div>
+        <div className="flex-1 text-white font-medium">{children}</div>
       </div>
       {iconPosition === "right" && (icon || defaultIcon)}
     </button>
@@ -156,11 +157,11 @@ export const AccordionContent: React.FC<AccordionContentProps> = ({
     <div
       className={`
         overflow-hidden transition-all duration-300 ease-in-out
-        ${isActive ? "max-h-fit opacity-100" : "max-h-0 opacity-0"}
+        ${isActive ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"}
         ${className}
       `}
     >
-      <div className="px-4 py-3 ">{children}</div>
+      <div className="px-6 py-4 border-t border-white/5 bg-black/20">{children}</div>
     </div>
   );
 };

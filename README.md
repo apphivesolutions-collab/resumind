@@ -1,87 +1,74 @@
-# Welcome to React Router!
+# Resumind AI
 
-A modern, production-ready template for building full-stack React applications using React Router.
+**"Smart Feedback for your Dream job"**
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+Resumind AI is a modern, AI-powered resume builder and analyzer designed to help job seekers create professional, ATS-friendly resumes and get instant feedback on their existing ones.
 
-## Features
+## 🚀 Features
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+### 🧠 AI-Powered Resume Builder
+- **Smart Content Generation**: Instantly generate professional descriptions for your experience, education, and summary sections using AI.
+- **Skill Suggestions**: Get AI-recommended skills based on your target role or experience.
+- **Real-time Preview**: See your resume update in real-time as you edit.
+- **Mobile Friendly**: Fully responsive builder experience with mobile preview support.
 
-## Getting Started
+### 📊 Resume Analysis
+- **ATS Score**: Get a detailed ATS compatibility score for your resume.
+- **Actionable Feedback**: Receive specific suggestions to improve your resume's impact and clarity.
+- **PDF Generation**: Download detailed analysis reports.
+
+### 🎨 Modern UI/UX
+- **Sleek Aesthetic**: Dark-themed, neon-accented design for a premium feel.
+- **Responsive Design**: Optimized for all devices, from desktop to mobile.
+- **Interactive Elements**: Smooth animations and intuitive controls.
+
+## 🛠️ Tech Stack
+
+- **Framework**: [React Router v7](https://reactrouter.com/) (formerly Remix)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **State Management**: Zustand (with persistence)
+- **AI Integration**: Puter.js (Claude 3.5 Sonnet)
+- **Icons**: Lucide React
+- **PDF Generation**: jsPDF, html2canvas
+
+## 🚦 Getting Started
+
+### Prerequisites
+- Node.js (v18+)
+- npm
 
 ### Installation
 
-Install the dependencies:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/resumind-ai.git
+   cd resumind-ai
+   ```
 
-```bash
-npm install
-```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-### Development
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-Start the development server with HMR:
+4. Open your browser and navigate to `http://localhost:5173`.
 
-```bash
-npm run dev
-```
+## 📱 Mobile Experience
 
-Your application will be available at `http://localhost:5173`.
+Resumind AI provides a seamless mobile experience:
+- **Responsive Navigation**: Easy-to-use hamburger menu on smaller screens.
+- **Mobile Builder**: Optimized form layout for mobile editing.
+- **Live Preview Modal**: Check your resume's look anytime with the mobile preview toggle.
 
-## Building for Production
+## 🤝 Contributing
 
-Create a production build:
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-```bash
-npm run build
-```
+## 📄 License
 
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+This project is licensed under the MIT License.

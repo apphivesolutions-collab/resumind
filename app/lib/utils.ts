@@ -21,7 +21,7 @@ export const formatSize = (bytes: number): string => {
         : Math.round(size * 100) / 100;
   return `${rounded} ${units[unitIndex]}`;
 };
-export const genrateUUID = () => {
+export const generateUUID = () => {
   return crypto.randomUUID();
 };
 export const cn = (...inputs: ClassValue[]) => {

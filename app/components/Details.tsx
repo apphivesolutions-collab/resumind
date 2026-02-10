@@ -10,18 +10,26 @@ import {
 // Helper: Local ScoreBadge specific to Details component
 const ScoreBadge: React.FC<{ score: number }> = ({ score }) => {
   const tone = score > 69 ? "green" : score > 39 ? "yellow" : "red";
+  // Updated colors for dark mode
   const bg =
     tone === "green"
-      ? "bg-green-100"
+      ? "bg-green-500/20"
       : tone === "yellow"
-        ? "bg-yellow-100"
-        : "bg-red-100";
+        ? "bg-yellow-500/20"
+        : "bg-red-500/20";
   const text =
     tone === "green"
-      ? "text-green-700"
+      ? "text-green-400"
       : tone === "yellow"
-        ? "text-yellow-700"
-        : "text-red-700";
+        ? "text-yellow-400"
+        : "text-red-400";
+  const border =
+    tone === "green"
+      ? "border-green-500/30"
+      : tone === "yellow"
+        ? "border-yellow-500/30"
+        : "border-red-500/30";
+
   const icon =
     tone === "green"
       ? "/icons/check.svg"
@@ -32,9 +40,10 @@ const ScoreBadge: React.FC<{ score: number }> = ({ score }) => {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium",
+        "inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold border",
         bg,
         text,
+        border
       )}
     >
       <img src={icon} alt="status" className="h-3.5 w-3.5" />
@@ -50,7 +59,7 @@ const CategoryHeader: React.FC<{ title: string; categoryScore: number }> = ({
 }) => {
   return (
     <div className="flex items-center justify-between w-full">
-      <h4 className="text-sm sm:text-base font-semibold text-gray-800">
+      <h4 className="text-base sm:text-lg font-semibold text-white tracking-wide">
         {title}
       </h4>
       <ScoreBadge score={categoryScore} />
@@ -64,20 +73,23 @@ type Tip = { type: "good" | "improve"; tip: string; explanation: string };
 // Helper: CategoryContent
 const CategoryContent: React.FC<{ tips: Tip[] }> = ({ tips }) => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Two-column grid of brief tips */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {tips.map((t, idx) => {
           const isGood = t.type === "good";
           const icon = isGood ? "/icons/check.svg" : "/icons/warning.svg";
-          const textColor = isGood ? "text-green-700" : "text-yellow-700";
-          const bg = isGood ? "bg-green-50" : "bg-yellow-50";
+          const textColor = isGood ? "text-green-400" : "text-yellow-400";
+          const bg = isGood ? "bg-green-500/10" : "bg-yellow-500/10";
+          const border = isGood ? "border-green-500/20" : "border-yellow-500/20";
+
           return (
             <div
               key={idx}
               className={cn(
-                "flex items-start gap-2 rounded-md px-2 py-1.5",
+                "flex items-start gap-3 rounded-xl px-4 py-3 border",
                 bg,
+                border
               )}
             >
               <img
@@ -92,24 +104,25 @@ const CategoryContent: React.FC<{ tips: Tip[] }> = ({ tips }) => {
       </div>
 
       {/* Explanations list */}
-      <div className="space-y-2">
+      <div className="space-y-4">
         {tips.map((t, idx) => {
           const isGood = t.type === "good";
-          const border = isGood ? "border-green-200" : "border-yellow-200";
-          const bg = isGood ? "bg-green-50" : "bg-yellow-50";
+          const border = isGood ? "border-green-500/30" : "border-yellow-500/30";
+          const bg = isGood ? "bg-green-500/5" : "bg-yellow-500/5";
           const heading = isGood ? "Good" : "Improve";
-          const headingColor = isGood ? "text-green-700" : "text-yellow-700";
+          const headingColor = isGood ? "text-green-400" : "text-yellow-400";
+
           return (
             <div
               key={`exp-${idx}`}
-              className={cn("rounded-lg border p-3", border, bg)}
+              className={cn("rounded-xl border p-4 hover:bg-white/5 transition-colors", border, bg)}
             >
               <p
-                className={cn("text-xs font-semibold uppercase", headingColor)}
+                className={cn("text-xs font-bold uppercase tracking-wider mb-2", headingColor)}
               >
                 {heading}
               </p>
-              <p className="mt-1 text-sm text-gray-700">{t.explanation}</p>
+              <p className="text-sm text-gray-300 leading-relaxed">{t.explanation}</p>
             </div>
           );
         })}
@@ -124,56 +137,56 @@ const Details: React.FC<{ feedback: Feedback }> = ({ feedback }) => {
     <div className="w-full">
       <Accordion
         defaultOpen="tone"
-        className="rounded-xl border border-gray-200 bg-white"
+        className="rounded-3xl !border-0 bg-transparent space-y-4"
       >
         {/* Tone & Style */}
-        <AccordionItem id="tone">
-          <AccordionHeader itemId="tone" className="hover:bg-gray-50">
+        <AccordionItem id="tone" className="!border !border-white/10 !bg-white/5">
+          <AccordionHeader itemId="tone">
             <CategoryHeader
               title="Tone & Style"
               categoryScore={feedback.toneAndStyle.score}
             />
           </AccordionHeader>
-          <AccordionContent itemId="tone" className="bg-gray-50/40">
+          <AccordionContent itemId="tone">
             <CategoryContent tips={feedback.toneAndStyle.tips as Tip[]} />
           </AccordionContent>
         </AccordionItem>
 
         {/* Content */}
-        <AccordionItem id="content">
-          <AccordionHeader itemId="content" className="hover:bg-gray-50">
+        <AccordionItem id="content" className="!border !border-white/10 !bg-white/5">
+          <AccordionHeader itemId="content">
             <CategoryHeader
               title="Content"
               categoryScore={feedback.content.score}
             />
           </AccordionHeader>
-          <AccordionContent itemId="content" className="bg-gray-50/40">
+          <AccordionContent itemId="content">
             <CategoryContent tips={feedback.content.tips as Tip[]} />
           </AccordionContent>
         </AccordionItem>
 
         {/* Structure */}
-        <AccordionItem id="structure">
-          <AccordionHeader itemId="structure" className="hover:bg-gray-50">
+        <AccordionItem id="structure" className="!border !border-white/10 !bg-white/5">
+          <AccordionHeader itemId="structure">
             <CategoryHeader
               title="Structure"
               categoryScore={feedback.structure.score}
             />
           </AccordionHeader>
-          <AccordionContent itemId="structure" className="bg-gray-50/40">
+          <AccordionContent itemId="structure">
             <CategoryContent tips={feedback.structure.tips as Tip[]} />
           </AccordionContent>
         </AccordionItem>
 
         {/* Skills */}
-        <AccordionItem id="skills">
-          <AccordionHeader itemId="skills" className="hover:bg-gray-50">
+        <AccordionItem id="skills" className="!border !border-white/10 !bg-white/5">
+          <AccordionHeader itemId="skills">
             <CategoryHeader
               title="Skills"
               categoryScore={feedback.skills.score}
             />
           </AccordionHeader>
-          <AccordionContent itemId="skills" className="bg-gray-50/40">
+          <AccordionContent itemId="skills">
             <CategoryContent tips={feedback.skills.tips as Tip[]} />
           </AccordionContent>
         </AccordionItem>
