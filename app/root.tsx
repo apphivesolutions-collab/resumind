@@ -14,6 +14,20 @@ import { useEffect } from "react";
 import { Toaster } from "sonner";
 import Footer from "~/components/Footer";
 
+export const meta: Route.MetaFunction = () => {
+  return [
+    { title: "Resumind AI - AI Powered Resume Builder" },
+    { name: "description", content: "Build standard, professional resumes in minutes with AI assistance." },
+    { property: "og:type", content: "website" },
+    { property: "og:site_name", content: "Resumind AI" },
+    { property: "og:image", content: "/resumind-og-image.png" },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:image", content: "/resumind-og-image.png" },
+    { name: "twitter:title", content: "Resumind AI" },
+    { name: "twitter:description", content: "AI Powered Resume Builder" },
+  ];
+};
+
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {

@@ -8,8 +8,10 @@ import { useEffect, useState } from "react";
 
 export function meta({ }: MetaArgs) {
   return [
-    { title: "Resumind AI" },
-    { name: "description", content: "Smart Feedback for you Dream job" },
+    { title: "Resumind AI - Smart Resume Builder" },
+    { name: "description", content: "Optimize your resume with AI-powered feedback. Get tailored suggestions to match your dream job description and increase your interview chances." },
+    { property: "og:title", content: "Resumind AI" },
+    { property: "og:description", content: "Smart Feedback for your Dream job" },
   ];
 }
 
