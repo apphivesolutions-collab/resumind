@@ -8,14 +8,14 @@ import { useEffect, useState } from "react";
 
 export function meta({ }: MetaArgs) {
   return [
-    { title: "Resumind AI - Smart Resume Builder" },
-    { name: "description", content: "Optimize your resume with AI-powered feedback. Get tailored suggestions to match your dream job description and increase your interview chances." },
-    { property: "og:title", content: "Resumind AI" },
-    { property: "og:description", content: "Smart Feedback for your Dream job" },
-    { property: "og:image", content: "https://resumind-ai-cyan.vercel.app/resumind-og-image.png" },
+    { title: "ResuMind - The AI-Powered Resume Builder & Analyzer" },
+    { name: "description", content: "Stop guessing if your resume is good enough. Get instant AI feedback, check your ATS score, and draft professional content in seconds with ResuMind." },
+    { property: "og:title", content: "ResuMind - The AI-Powered Resume Builder & Analyzer" },
+    { property: "og:description", content: "Stop guessing if your resume is good enough. Get instant AI feedback, check your ATS score, and draft professional content in seconds with ResuMind." },
+    { property: "og:image", content: "https://resumind-ai-cyan.vercel.app/resumind-og-image.png?v=2" },
     { property: "og:url", content: "https://resumind-ai-cyan.vercel.app/" },
     { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:image", content: "https://resumind-ai-cyan.vercel.app/resumind-og-image.png" },
+    { name: "twitter:image", content: "https://resumind-ai-cyan.vercel.app/resumind-og-image.png?v=2" },
   ];
 }
 

@@ -16,16 +16,20 @@ import Footer from "~/components/Footer";
 
 export const meta: Route.MetaFunction = () => {
   return [
-    { title: "Resumind AI - AI Powered Resume Builder" },
-    { name: "description", content: "Build standard, professional resumes in minutes with AI assistance." },
+    { title: "ResuMind | AI Resume Builder, ATS Scorer & Application Tracker" },
+    { name: "description", content: "Optimize your job search with ResuMind. Build ATS-friendly resumes with AI, get instant scoring feedback, and track your applications in one dashboard." },
+    { name: "keywords", content: "AI resume builder, free resume scorer, ATS checker, resume analysis, job application tracker, AI summary generator, CV builder, Apphive Solutions" },
+    { name: "author", content: "Apphive Solutions" },
+    { name: "robots", content: "index, follow" },
     { property: "og:type", content: "website" },
-    { property: "og:site_name", content: "Resumind AI" },
+    { property: "og:site_name", content: "ResuMind" },
     { property: "og:url", content: "https://resumind-ai-cyan.vercel.app/" },
-    { property: "og:image", content: "https://resumind-ai-cyan.vercel.app/resumind-og-image.png" },
+    { property: "og:image", content: "https://resumind-ai-cyan.vercel.app/resumind-og-image.png?v=2" },
     { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:image", content: "https://resumind-ai-cyan.vercel.app/resumind-og-image.png" },
-    { name: "twitter:title", content: "Resumind AI" },
-    { name: "twitter:description", content: "AI Powered Resume Builder" },
+    { name: "twitter:url", content: "https://resumind-ai-cyan.vercel.app/" },
+    { name: "twitter:image", content: "https://resumind-ai-cyan.vercel.app/resumind-og-image.png?v=2" },
+    { name: "twitter:title", content: "ResuMind | Track Applications & Boost Your Resume Score" },
+    { name: "twitter:description", content: "Don't let the ATS block your dream job. Use our AI tools to score, build, and optimize your resume for recruiters today." },
   ];
 };
 
@@ -40,6 +44,7 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
+  { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -54,6 +59,29 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              name: "ResuMind",
+              applicationCategory: "BusinessApplication",
+              operatingSystem: "Web",
+              offers: {
+                "@type": "Offer",
+                price: "0",
+                priceCurrency: "USD",
+              },
+              description:
+                "AI-powered resume builder and application tracker that provides instant ATS scoring and feedback.",
+              author: {
+                "@type": "Organization",
+                name: "Apphive Solutions",
+              },
+            }),
+          }}
+        />
       </head>
       <body>
         <script src="https://js.puter.com/v2/"></script>
