@@ -25,6 +25,18 @@ const PersonalDetails = () => {
                 </div>
 
                 <div className="space-y-2">
+                    <label>Professional Title</label>
+                    <input
+                        type="text"
+                        name="professionalTitle"
+                        value={personalInfo.professionalTitle}
+                        onChange={handleChange}
+                        placeholder="Senior Software Engineer"
+                    />
+                    <p className="text-xs text-gray-400">This appears below your name on the resume</p>
+                </div>
+
+                <div className="space-y-2">
                     <label>Email</label>
                     <input
                         type="email"

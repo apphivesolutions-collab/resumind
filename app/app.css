@@ -49,19 +49,19 @@ label {
 }
 
 input {
-    @apply w-full px-5 py-3.5 bg-white/[0.03] border border-white/10 rounded-xl text-sm font-medium text-text-primary placeholder:text-text-secondary/40 focus:outline-none focus:border-neon-purple/50 focus:bg-white/[0.05] transition-all duration-300;
+    @apply w-full px-5 py-3.5 bg-white/[0.08] border border-white/20 rounded-xl text-sm font-medium text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-neon-purple/70 focus:bg-white/[0.10] transition-all duration-300;
 }
 
 input:focus {
-    box-shadow: 0 0 15px rgba(168, 85, 247, 0.1);
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.15);
 }
 
 textarea {
-    @apply w-full px-5 py-3.5 bg-white/[0.03] border border-white/10 rounded-xl text-sm font-medium text-text-primary placeholder:text-text-secondary/40 focus:outline-none focus:border-neon-purple/50 focus:bg-white/[0.05] transition-all duration-300 resize-none leading-relaxed;
+    @apply w-full px-5 py-3.5 bg-white/[0.08] border border-white/20 rounded-xl text-sm font-medium text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-neon-purple/70 focus:bg-white/[0.10] transition-all duration-300 resize-none leading-relaxed;
 }
 
 textarea:focus {
-    box-shadow: 0 0 15px rgba(168, 85, 247, 0.1);
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.15);
 }
 
 form {
