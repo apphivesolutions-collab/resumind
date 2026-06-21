@@ -43,7 +43,7 @@ const ExperienceSection = () => {
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {experience.map((exp, index) => (
                 <div key={exp.id} className="p-6 bg-white/[0.02] border border-white/5 rounded-2xl space-y-4 relative group hover:border-white/10 transition-all">
-                    <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute top-4 right-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                         <button
                             onClick={() => {
                                 removeExperience(exp.id);

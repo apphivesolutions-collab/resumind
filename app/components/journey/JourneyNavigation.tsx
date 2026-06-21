@@ -11,8 +11,8 @@ const JourneyNavigation = () => {
         { id: 3, label: 'Work Experience', key: 'experience' },
         { id: 4, label: 'Education', key: 'education' },
         { id: 5, label: 'Skills', key: 'skills' },
-        { id: 6, label: 'Projects & Certifications', key: null }, // Combined step
-        { id: 7, label: 'Review & Export', key: null },
+        { id: 6, label: 'Projects', key: 'projects' },
+        { id: 7, label: 'Certifications', key: 'certifications' },
     ];
 
     const currentStep = steps.find((s) => s.id === journeyStep);

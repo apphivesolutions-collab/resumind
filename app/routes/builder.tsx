@@ -10,13 +10,14 @@ import SkillsSection from "~/components/builder/SkillsSection";
 import SummarySection from "~/components/builder/SummarySection";
 import ProjectsSection from "~/components/builder/ProjectsSection";
 import CertificationsSection from "~/components/builder/CertificationsSection";
-import ResumePreview from "~/components/builder/ResumePreview";
+import ResumePreview, { ScaledResumePreview } from "~/components/builder/ResumePreview";
 import WelcomeModal from "~/components/journey/WelcomeModal";
 import ProgressTracker from "~/components/journey/ProgressTracker";
 import JourneyNavigation from "~/components/journey/JourneyNavigation";
 import PreviewModal from "~/components/journey/PreviewModal";
 import { User, Briefcase, GraduationCap, Code, FileText, ChevronRight, ArrowLeft, Download, AlertTriangle, X, FolderKanban, Award, Palette, Eye } from "lucide-react";
 import jsPDF from "jspdf";
+import { getTemplateById } from "~/lib/templates/templateDefinitions";
 
 export function meta({ }: MetaArgs) {
     return [
@@ -26,8 +27,7 @@ export function meta({ }: MetaArgs) {
 }
 
 const Builder = () => {
-    const { resume, journeyStep, setJourneyStep, showWelcome, setShowWelcome } = useBuilderStore();
-    const [activeTab, setActiveTab] = useState("personal");
+    const { resume, journeyStep, setJourneyStep, showWelcome, setShowWelcome, selectedTemplate } = useBuilderStore();
     const [showExitModal, setShowExitModal] = useState(false);
     const [showMobilePreview, setShowMobilePreview] = useState(false);
     const [showPreview, setShowPreview] = useState(false);
@@ -56,9 +56,10 @@ const Builder = () => {
         7: 'certifications',
     };
 
+    const activeTab = stepToTabMap[journeyStep] || 'personal';
+
     // Handle tab changes to update journey step
     const handleTabChange = (tabId: string) => {
-        setActiveTab(tabId);
         setJourneyStep(tabToStepMap[tabId] || 1);
     };
 
@@ -89,6 +90,32 @@ const Builder = () => {
         setIsDownloading(true);
 
         try {
+            const template = getTemplateById(selectedTemplate);
+            const colors = template?.colors || {
+                primary: '#2563eb',
+                secondary: '#64748b',
+                accent: '#3b82f6',
+                text: '#1e293b',
+                textSecondary: '#64748b',
+                background: '#ffffff',
+                border: '#e2e8f0',
+            };
+
+            const hexToRgb = (hex: string) => {
+                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16)
+                } : null;
+            };
+
+            const primaryRgb = hexToRgb(colors.primary) || { r: 0, g: 0, b: 0 };
+            const secondaryRgb = hexToRgb(colors.secondary) || { r: 60, g: 60, b: 60 };
+            const textRgb = hexToRgb(colors.text) || { r: 40, g: 40, b: 40 };
+            const textSecRgb = hexToRgb(colors.textSecondary) || { r: 80, g: 80, b: 80 };
+            const borderRgb = hexToRgb(colors.border) || { r: 200, g: 200, b: 200 };
+
             const pdf = new jsPDF("p", "mm", "a4");
             const pageWidth = pdf.internal.pageSize.getWidth();
             const margin = 20;
@@ -110,19 +137,69 @@ const Builder = () => {
                 yPos += 6;
                 pdf.setFontSize(11);
                 pdf.setFont("helvetica", "bold");
-                pdf.setTextColor(0, 0, 0);
+                pdf.setTextColor(primaryRgb.r, primaryRgb.g, primaryRgb.b);
                 pdf.text(title.toUpperCase(), margin, yPos);
                 yPos += 1;
-                pdf.setDrawColor(200, 200, 200);
+                pdf.setDrawColor(borderRgb.r, borderRgb.g, borderRgb.b);
                 pdf.line(margin, yPos, pageWidth - margin, yPos);
                 yPos += 5;
+            };
+
+            const renderBulletDescription = (description: string) => {
+                const lines = description.split("\n").map(l => l.trim()).filter(Boolean);
+                
+                const hasBulletsInText = lines.some(line => 
+                    line.startsWith("•") || line.startsWith("-") || line.startsWith("*") || /^\d+\./.test(line)
+                );
+
+                if (lines.length === 1 && !hasBulletsInText) {
+                    pdf.setFontSize(9);
+                    pdf.setFont("helvetica", "normal");
+                    pdf.setTextColor(textRgb.r, textRgb.g, textRgb.b);
+                    const descLines = pdf.splitTextToSize(description, contentWidth);
+                    descLines.forEach((line: string) => {
+                        checkNewPage(6);
+                        pdf.text(line, margin, yPos);
+                        yPos += 4.5;
+                    });
+                    return;
+                }
+
+                lines.forEach((line: string) => {
+                    let cleanLine = line;
+                    
+                    if (cleanLine.startsWith("•") || cleanLine.startsWith("-") || cleanLine.startsWith("*")) {
+                        cleanLine = cleanLine.substring(1).trim();
+                    } else if (/^\d+\./.test(cleanLine)) {
+                        cleanLine = cleanLine.replace(/^\d+\.\s*/, "").trim();
+                    }
+
+                    checkNewPage(8);
+                    pdf.setFontSize(9);
+                    
+                    pdf.setFont("helvetica", "bold");
+                    pdf.setTextColor(primaryRgb.r, primaryRgb.g, primaryRgb.b);
+                    pdf.text("•", margin + 2, yPos);
+                    
+                    pdf.setFont("helvetica", "normal");
+                    pdf.setTextColor(textRgb.r, textRgb.g, textRgb.b);
+                    
+                    const indent = 6;
+                    const descLines = pdf.splitTextToSize(cleanLine, contentWidth - indent);
+                    descLines.forEach((subLine: string, subIdx: number) => {
+                        if (subIdx > 0) checkNewPage(6);
+                        pdf.text(subLine, margin + indent, yPos);
+                        yPos += 4.5;
+                    });
+                    yPos += 1;
+                });
             };
 
             // Header - Personal Info
             if (resume.personalInfo.fullName) {
                 pdf.setFontSize(20);
                 pdf.setFont("helvetica", "bold");
-                pdf.setTextColor(0, 0, 0);
+                pdf.setTextColor(primaryRgb.r, primaryRgb.g, primaryRgb.b);
                 pdf.text(resume.personalInfo.fullName.toUpperCase(), margin, yPos);
                 yPos += 7;
             }
@@ -131,7 +208,7 @@ const Builder = () => {
             if (resume.personalInfo.professionalTitle) {
                 pdf.setFontSize(12);
                 pdf.setFont("helvetica", "bold");
-                pdf.setTextColor(60, 60, 60);
+                pdf.setTextColor(secondaryRgb.r, secondaryRgb.g, secondaryRgb.b);
                 pdf.text(resume.personalInfo.professionalTitle, margin, yPos);
                 yPos += 7;
             }
@@ -139,7 +216,7 @@ const Builder = () => {
             // Contact Info
             pdf.setFontSize(9);
             pdf.setFont("helvetica", "normal");
-            pdf.setTextColor(60, 60, 60);
+            pdf.setTextColor(textSecRgb.r, textSecRgb.g, textSecRgb.b);
             const contactInfo = [
                 resume.personalInfo.email,
                 resume.personalInfo.phone,
@@ -156,17 +233,17 @@ const Builder = () => {
                 });
             }
 
-            pdf.setDrawColor(0, 0, 0);
+            pdf.setDrawColor(borderRgb.r, borderRgb.g, borderRgb.b);
             pdf.setLineWidth(0.5);
             pdf.line(margin, yPos, pageWidth - margin, yPos);
-            yPos += 2;
+            yPos += 4;
 
             // Summary
             if (resume.summary) {
                 addSection("Professional Summary");
                 pdf.setFontSize(10);
                 pdf.setFont("helvetica", "normal");
-                pdf.setTextColor(40, 40, 40);
+                pdf.setTextColor(textRgb.r, textRgb.g, textRgb.b);
                 const summaryLines = pdf.splitTextToSize(resume.summary, contentWidth);
                 summaryLines.forEach((line: string) => {
                     checkNewPage();
@@ -190,7 +267,7 @@ const Builder = () => {
                     const dates = `${exp.startDate} – ${exp.endDate || "Present"}`;
                     pdf.setFont("helvetica", "normal");
                     pdf.setFontSize(9);
-                    pdf.setTextColor(80, 80, 80);
+                    pdf.setTextColor(textSecRgb.r, textSecRgb.g, textSecRgb.b);
                     const dateWidth = pdf.getTextWidth(dates);
                     pdf.text(dates, pageWidth - margin - dateWidth, yPos);
                     yPos += 5;
@@ -198,21 +275,13 @@ const Builder = () => {
                     // Company
                     pdf.setFontSize(10);
                     pdf.setFont("helvetica", "bold");
-                    pdf.setTextColor(40, 40, 40);
+                    pdf.setTextColor(secondaryRgb.r, secondaryRgb.g, secondaryRgb.b);
                     pdf.text(exp.company, margin, yPos);
                     yPos += 5;
 
                     // Description
                     if (exp.description) {
-                        pdf.setFontSize(9);
-                        pdf.setFont("helvetica", "normal");
-                        pdf.setTextColor(40, 40, 40);
-                        const descLines = pdf.splitTextToSize(exp.description, contentWidth);
-                        descLines.forEach((line: string) => {
-                            checkNewPage();
-                            pdf.text(line, margin, yPos);
-                            yPos += 4;
-                        });
+                        renderBulletDescription(exp.description);
                     }
                     yPos += 3;
                 });
@@ -232,13 +301,13 @@ const Builder = () => {
                     const dates = `${edu.startDate} – ${edu.endDate || "Present"}`;
                     pdf.setFont("helvetica", "normal");
                     pdf.setFontSize(9);
-                    pdf.setTextColor(80, 80, 80);
+                    pdf.setTextColor(textSecRgb.r, textSecRgb.g, textSecRgb.b);
                     const dateWidth = pdf.getTextWidth(dates);
                     pdf.text(dates, pageWidth - margin - dateWidth, yPos);
                     yPos += 5;
 
                     pdf.setFontSize(10);
-                    pdf.setTextColor(40, 40, 40);
+                    pdf.setTextColor(secondaryRgb.r, secondaryRgb.g, secondaryRgb.b);
                     pdf.text(edu.degree, margin, yPos);
                     yPos += 6;
                 });
@@ -249,7 +318,7 @@ const Builder = () => {
                 addSection("Technical Skills");
                 pdf.setFontSize(9);
                 pdf.setFont("helvetica", "normal");
-                pdf.setTextColor(40, 40, 40);
+                pdf.setTextColor(textRgb.r, textRgb.g, textRgb.b);
                 const skillsText = resume.skills.map((s) => s.name).join(" • ");
                 const skillLines = pdf.splitTextToSize(skillsText, contentWidth);
                 skillLines.forEach((line: string) => {
@@ -276,28 +345,20 @@ const Builder = () => {
                     if (project.technologies.length > 0) {
                         pdf.setFontSize(9);
                         pdf.setFont("helvetica", "bold");
-                        pdf.setTextColor(80, 80, 80);
+                        pdf.setTextColor(secondaryRgb.r, secondaryRgb.g, secondaryRgb.b);
                         pdf.text(project.technologies.join(" • "), margin, yPos);
                         yPos += 5;
                     }
 
                     // Description
                     if (project.description) {
-                        pdf.setFontSize(9);
-                        pdf.setFont("helvetica", "normal");
-                        pdf.setTextColor(40, 40, 40);
-                        const descLines = pdf.splitTextToSize(project.description, contentWidth);
-                        descLines.forEach((line: string) => {
-                            checkNewPage();
-                            pdf.text(line, margin, yPos);
-                            yPos += 4;
-                        });
+                        renderBulletDescription(project.description);
                     }
 
                     // Link
                     if (project.link) {
                         pdf.setFontSize(8);
-                        pdf.setTextColor(80, 80, 80);
+                        pdf.setTextColor(textSecRgb.r, textSecRgb.g, textSecRgb.b);
                         pdf.text(project.link, margin, yPos);
                         yPos += 2;
                     }
@@ -321,7 +382,7 @@ const Builder = () => {
                     if (cert.date) {
                         pdf.setFont("helvetica", "normal");
                         pdf.setFontSize(9);
-                        pdf.setTextColor(80, 80, 80);
+                        pdf.setTextColor(textSecRgb.r, textSecRgb.g, textSecRgb.b);
                         const dateWidth = pdf.getTextWidth(cert.date);
                         pdf.text(cert.date, pageWidth - margin - dateWidth, yPos);
                     }
@@ -329,14 +390,14 @@ const Builder = () => {
 
                     // Issuer
                     pdf.setFontSize(10);
-                    pdf.setTextColor(40, 40, 40);
+                    pdf.setTextColor(secondaryRgb.r, secondaryRgb.g, secondaryRgb.b);
                     pdf.text(cert.issuer, margin, yPos);
                     yPos += 4;
 
                     // Credential ID/Link
                     if (cert.credentialId) {
                         pdf.setFontSize(8);
-                        pdf.setTextColor(80, 80, 80);
+                        pdf.setTextColor(textSecRgb.r, textSecRgb.g, textSecRgb.b);
                         pdf.text(cert.credentialId, margin, yPos);
                         yPos += 5;
                     }
@@ -454,10 +515,8 @@ const Builder = () => {
                             <X size={20} />
                         </button>
                     </div>
-                    <div className="flex-1 overflow-y-auto p-4 flex justify-center bg-[#050508]">
-                        <div className="origin-top scale-[0.5] sm:scale-[0.6] md:scale-[0.7]">
-                            <ResumePreview />
-                        </div>
+                    <div className="flex-1 overflow-y-auto p-6 bg-[#050508]">
+                        <ScaledResumePreview />
                     </div>
                 </div>
             )}
@@ -471,9 +530,9 @@ const Builder = () => {
                 <PreviewModal isOpen={showPreview} onClose={() => setShowPreview(false)} />
 
                 {/* Left Sidebar: Navigation + Progress */}
-                <aside className="w-16 lg:w-64 border-r border-white/5 bg-[#0e0e14] flex flex-col shrink-0 z-20 transition-all duration-300">
+                <aside className="hidden lg:flex lg:w-64 border-r border-white/5 bg-[#0e0e14] flex-col shrink-0 z-20 transition-all duration-300">
                     {/* Navigation Tabs */}
-                    <nav className="flex-1 px-2 lg:px-3 py-4 space-y-1 overflow-y-auto custom-scrollbar">
+                    <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto custom-scrollbar">
                         {tabs.map((tab) => {
                             const Icon = tab.icon;
                             const isActive = activeTab === tab.id;
@@ -481,29 +540,51 @@ const Builder = () => {
                                 <button
                                     key={tab.id}
                                     onClick={() => handleTabChange(tab.id)}
-                                    className={`w-full flex items-center gap-3 px-3 py-3 lg:px-3.5 lg:py-3 rounded-xl transition-all duration-200 group justify-center lg:justify-start ${isActive
+                                    className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl transition-all duration-200 group justify-start ${isActive
                                         ? "bg-gradient-to-r from-neon-purple/15 to-neon-blue/15 text-white border border-neon-purple/30 shadow-lg shadow-neon-purple/10"
                                         : "text-gray-400 hover:text-white hover:bg-white/5"
                                         }`}
                                 >
                                     <Icon size={18} className={`shrink-0 ${isActive ? "text-neon-purple" : "text-gray-500 group-hover:text-white"}`} />
-                                    <span className="hidden lg:block font-semibold text-xs">{tab.label}</span>
-                                    {isActive && <ChevronRight size={14} className="ml-auto hidden lg:block opacity-60" />}
+                                    <span className="font-semibold text-xs">{tab.label}</span>
+                                    {isActive && <ChevronRight size={14} className="ml-auto opacity-60" />}
                                 </button>
                             )
                         })}
                     </nav>
 
                     {/* Progress Tracker (Desktop Only) */}
-                    <div className="hidden lg:block px-3 pb-4">
+                    <div className="px-3 pb-4">
                         <ProgressTracker />
                     </div>
                 </aside>
 
                 {/* Middle: Form Editor */}
                 <div className="flex-1 flex flex-col min-w-0 bg-[#0a0a0f] relative z-10 w-full">
+                    {/* Horizontal Scrollable Tabs for Mobile/Tablet */}
+                    <div className="lg:hidden flex items-center gap-2 overflow-x-auto px-6 py-4 border-b border-white/5 bg-[#0a0a0f] scrollbar-none shrink-0">
+                        {tabs.map((tab) => {
+                            const Icon = tab.icon;
+                            const isActive = activeTab === tab.id;
+                            return (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => handleTabChange(tab.id)}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl whitespace-nowrap text-xs font-semibold transition-all duration-200 border ${
+                                        isActive
+                                            ? "bg-gradient-to-r from-neon-purple to-neon-blue text-white border-transparent shadow-lg shadow-neon-purple/20"
+                                            : "bg-white/5 border-white/5 text-gray-400 hover:text-white hover:bg-white/10"
+                                    }`}
+                                >
+                                    <Icon size={14} />
+                                    <span>{tab.label}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+
                     <div className="flex-1 overflow-y-auto custom-scrollbar">
-                        <div className="max-w-4xl mx-auto w-full px-6 lg:px-12 py-8 pb-20">
+                        <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-12 py-6 lg:py-8 pb-20">
                             {/* Section Header */}
                             <div className="mb-6">
                                 <h2 className="text-2xl lg:text-3xl font-bold text-white mb-2 flex items-center gap-3">
@@ -524,7 +605,7 @@ const Builder = () => {
                             </div>
 
                             {/* Content Card */}
-                            <div className="bg-gradient-to-br from-[#111118] to-[#0e0e14] border border-white/10 rounded-2xl p-6 lg:p-8 shadow-2xl shadow-black/50 backdrop-blur-sm">
+                            <div className="bg-gradient-to-br from-[#111118] to-[#0e0e14] border border-white/10 rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xl shadow-black/50 backdrop-blur-sm">
                                 {renderSection()}
                             </div>
                         </div>

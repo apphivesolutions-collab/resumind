@@ -14,7 +14,7 @@ const ProgressTracker = () => {
         { id: 4, label: 'Education', key: 'education' },
         { id: 5, label: 'Skills', key: 'skills' },
         { id: 6, label: 'Projects', key: 'projects' },
-        { id: 7, label: 'Review', key: null },
+        { id: 7, label: 'Certifications', key: 'certifications' },
     ];
 
     const getStepStatus = (step: typeof steps[0]) => {

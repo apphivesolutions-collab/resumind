@@ -1,6 +1,6 @@
 import { X, Eye, Palette } from 'lucide-react';
 import { useBuilderStore } from '~/lib/builderStore';
-import ResumePreview from '../builder/ResumePreview';
+import ResumePreview, { ScaledResumePreview } from '../builder/ResumePreview';
 import templates, { getTemplateById } from '~/lib/templates/templateDefinitions';
 
 interface PreviewModalProps {
@@ -52,10 +52,8 @@ const PreviewModal = ({ isOpen, onClose }: PreviewModalProps) => {
 
                 {/* Preview Content */}
                 <div className="flex-1 overflow-y-auto custom-scrollbar bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-900/20 to-black">
-                    <div className="w-full min-h-full flex justify-center py-10 px-4">
-                        <div className="relative origin-top scale-[0.65] lg:scale-[0.75] xl:scale-[0.85]">
-                            <ResumePreview />
-                        </div>
+                    <div className="w-full min-h-full flex justify-center py-10 px-6">
+                        <ScaledResumePreview />
                     </div>
                 </div>
 

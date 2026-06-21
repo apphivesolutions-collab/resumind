@@ -1,6 +1,7 @@
 import { useBuilderStore } from "~/lib/builderStore";
 import { getTemplateById } from "~/lib/templates/templateDefinitions";
 import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 const ResumePreview = () => {
     const { resume, selectedTemplate } = useBuilderStore();
@@ -272,6 +273,64 @@ const ResumePreview = () => {
                         </div>
                     </section>
                 )}
+            </div>
+        </div>
+    );
+};
+
+export const ScaledResumePreview = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [scale, setScale] = useState(1);
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (containerRef.current) {
+                const parent = containerRef.current.parentElement;
+                if (parent) {
+                    const parentWidth = parent.clientWidth;
+                    const padding = window.innerWidth < 640 ? 16 : 32;
+                    const availableWidth = parentWidth - padding;
+                    const childWidth = 794; // approx 210mm in pixels
+                    const newScale = Math.min(availableWidth / childWidth, 1);
+                    setScale(newScale);
+                }
+            }
+        };
+
+        handleResize();
+        
+        let resizeObserver: ResizeObserver | null = null;
+        if (containerRef.current && containerRef.current.parentElement) {
+            resizeObserver = new ResizeObserver(() => {
+                handleResize();
+            });
+            resizeObserver.observe(containerRef.current.parentElement);
+        }
+
+        window.addEventListener("resize", handleResize);
+        return () => {
+            window.removeEventListener("resize", handleResize);
+            if (resizeObserver) resizeObserver.disconnect();
+        };
+    }, []);
+
+    // A4 height is 297mm. 297mm * 3.7795275591 px/mm = 1122.5 px
+    const a4Height = 1123;
+
+    return (
+        <div
+            ref={containerRef}
+            className="w-full flex justify-center items-start overflow-hidden transition-all duration-300"
+            style={{ height: `${a4Height * scale}px` }}
+        >
+            <div
+                className="origin-top shrink-0 shadow-2xl rounded-sm"
+                style={{
+                    transform: `scale(${scale})`,
+                    width: "210mm",
+                }}
+            >
+                <ResumePreview />
             </div>
         </div>
     );
